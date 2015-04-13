@@ -27,6 +27,7 @@ else
 end
 
 service 'auditd' do
+  provider Chef::Provider::Service::Init::Redhat
   supports [:restart, :reload, :status]
   action :enable
 end
