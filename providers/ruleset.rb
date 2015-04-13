@@ -19,7 +19,9 @@
 
 # provider for installing audit rules from a template
 action :create do
-  template '/etc/audit/audit.rules' do
+  rulefile = '/etc/audit/audit.rules'
+  rulefile = '/etc/audit/rules.d/audit.rules' if platform_family?('rhel') && node['platform_version'].to_i == 7
+  template rulefile do
     source "#{new_resource.name}.erb"
     notifies :restart, resources(service: 'auditd')
   end

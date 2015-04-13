@@ -23,8 +23,9 @@ action :create do
   case node['platform_family']
   when 'rhel'
     auditd_version = `/sbin/aureport -v`.split(' ').last
-
-    remote_file '/etc/audit/audit.rules' do
+    rulefile = '/etc/audit/audit.rules'
+    rulefile = '/etc/audit/rules.d/audit.rules' if node['platform_version'].to_i == 7
+    remote_file rulefile do
       source "file:///usr/share/doc/audit-#{auditd_version}/#{new_resource.name}.rules"
       notifies :restart, 'service[auditd]'
     end
